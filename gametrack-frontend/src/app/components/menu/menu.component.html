@@ -1,0 +1,18 @@
+<div class="menu-container">
+  <div class="logo-container">
+    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" size="large" shape="circle" />
+    <h2>GameTrack</h2>
+  </div>
+  <div class="nav-container">
+    <nav>
+      <p-button label="Home" [link]="true" routerLink=""/>
+      <p-button label="Profil" [link]="true" routerLink="profile"/>
+      <p-button label="Game" [link]="true" routerLink="game/1942"/>
+      <p-button label="Collection" [link]="true" routerLink="collection"/>
+    </nav>
+    <p-iconfield class="p-iconfield p-iconfield-right" >
+      <input type="text" pInputText placeholder="Search" class="p-inputtext p-component" >
+      <p-inputicon styleclass="pi pi-search" class="pi pi-search p-inputicon"></p-inputicon>
+    </p-iconfield>
+  </div>
+</div>  

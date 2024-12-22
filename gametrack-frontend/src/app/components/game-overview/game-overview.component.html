@@ -1,0 +1,74 @@
+<div class="game-overview-container">
+    <h3>Game Overview</h3>
+    
+    <div class="game-presentation-container custom-border">
+        <div class="galleria-container">
+            <p-galleria 
+                #galleria
+                *ngIf="gameScreenshots.length > 0" 
+                [value]="gameScreenshots" 
+                [showIndicators]="true"
+                [showIndicatorsOnItem]="true"
+                (activeIndexChange)="onIndexChange($event)"
+                [fullScreen]="false"
+                [autoPlay]="true"
+                [showThumbnails]="false">
+                <ng-template pTemplate="item" let-item>
+                    <img [src]="item.itemImageSrc" [alt]="item.alt" style="width: 100%; display: block;" (click)="openFullscreen()"/>
+                </ng-template>
+            </p-galleria>
+            <p-galleria 
+                #galleriafullscreen
+                *ngIf="gameScreenshots.length > 0" 
+                [value]="gameScreenshots" 
+                [showIndicators]="true"
+                [showIndicatorsOnItem]="true"
+                (activeIndexChange)="onIndexChange($event)"
+                [(activeIndex)]="activeIndex"
+                [fullScreen]="true"
+                [(visible)]="fullscreenVisible"
+                [showThumbnails]="false"
+                >
+                <ng-template pTemplate="item" let-item>
+                    <img [src]="item.itemImageSrc" [alt]="item.alt" style="width: 100%; display: block;"/>
+                </ng-template>
+            </p-galleria>
+            <p *ngIf="gameScreenshots.length === 0">No screenshots available for this game.</p>
+        </div>
+        <div class="genre-container">
+            <h3>{{gameInfos[0].name}}</h3>
+            <span>Release date : {{releaseDate}}</span>
+            <div class="bottom-container">
+                <div class="tag-container">
+                    <p-tag value="{{genre.name}}" severity="secondary" *ngFor="let genre of gameGenres" ></p-tag>
+                </div>
+                <div class="btn-container">
+                    <p-button label="Add to my collection" severity="contrast"></p-button>
+                    <p-button label="Whishlist" severity="contrast"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-description custom-border">
+        <h3>Description</h3>
+        <p>{{gameSummary}}</p>
+    </div>
+
+    <div class="dev-plat-container">
+        <div class="developers-container custom-border">
+            <img src="https://images.igdb.com/igdb/image/upload/t_logo_med/{{gameDeveloper.logo.image_id}}.png" />
+            
+            <div class="developer-info-container">
+                <h3>Developer</h3>
+                <span class="custom-title">{{gameDeveloper.name}}</span>
+            </div>
+        </div>
+        <div class="plateform-container custom-border">
+            <h3>Platform(s)</h3>
+            <div class="platforms-list-container">
+                <p-tag *ngFor="let platform of gamePlatforms" value="{{platform.name}}" size="large" severity="secondary"/>
+            </div>
+        </div>
+    </div>
+</div>

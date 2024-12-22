@@ -1,0 +1,61 @@
+// ::ng-deep {
+//     .p-galleria{
+//         border-radius: 4px 4px 0 0!important;
+//         border: rgba(0, 0, 0, 0.168627451) solid 1px!important;
+//         border-bottom: unset;
+//     }
+// }
+
+.genre-container{
+    padding: 15px;
+    .bottom-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .tag-container{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-container{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+    }
+}
+
+.game-description{
+    padding: 15px;
+    margin-top: 50px;
+    p{
+        font-size: 16px;
+    }
+}
+
+.dev-plat-container{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    .developers-container{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        img{
+            border-radius: 6px;
+            padding: 15px;
+            width: 175px;
+        }
+    }
+    .plateform-container{
+        flex-grow: 1;
+        padding: 15px;
+        .platforms-list-container{
+            display: flex;
+            gap: 10px;
+        }
+    }
+}
