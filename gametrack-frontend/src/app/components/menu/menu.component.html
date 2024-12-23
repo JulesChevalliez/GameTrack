@@ -6,9 +6,10 @@
   <div class="nav-container">
     <nav>
       <p-button label="Home" [link]="true" routerLink=""/>
-      <p-button label="Profil" [link]="true" routerLink="profile"/>
-      <p-button label="Game" [link]="true" routerLink="game/1942"/>
-      <p-button label="Collection" [link]="true" routerLink="collection"/>
+      <p-button label="Profil" [link]="true" routerLink="profile" *ngIf="userService.isLoggedIn()"/>
+      <p-button label="Game" [link]="true" routerLink="game/1942" *ngIf="userService.isLoggedIn()"/>
+      <p-button label="Collection" [link]="true" routerLink="collection" *ngIf="userService.isLoggedIn()"/>
+      <p-button label="Login" [link]="true" routerLink="login" *ngIf="!userService.isLoggedIn()"/>
     </nav>
     <p-iconfield class="p-iconfield p-iconfield-right" >
       <input type="text" pInputText placeholder="Search" class="p-inputtext p-component" >

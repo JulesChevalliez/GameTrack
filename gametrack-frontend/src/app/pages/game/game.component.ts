@@ -5,6 +5,9 @@ import { GameService } from '../../services/game.service';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { GameOverviewComponent } from '../../components/game-overview/game-overview.component';
 import { DividerModule } from 'primeng/divider';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -50,44 +53,54 @@ export class GameComponent {
   constructor(
     private route: ActivatedRoute,
     private gameService: GameService,
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
-    this.gameId = this.route.snapshot.paramMap.get('id');
-    this.gameService.getGameById(this.gameId).subscribe((res) => {
-      console.log(res);
 
-      this.gameInfos = res;
+    if(!this.userService.isLoggedIn()){
+      this.router.navigate(["/login"]);
+    }else{
+      this.gameId = this.route.snapshot.paramMap.get('id');
+      this.gameService.getGameById(this.gameId).subscribe((res) => {
+            console.log(res);
+      
+            this.gameInfos = res;
+      
+            this.releaseDate = new Date(this.gameInfos[0].first_release_date * 1000).toLocaleDateString("fr");
+            this.gameSummary = res[0]?.summary;
+      
+            if (res[0]?.screenshots?.length) {
+              this.gameScreenshots = res[0].screenshots.map((screenshot: any) => ({
+                itemImageSrc: `https://images.igdb.com/igdb/image/upload/t_1080p/${screenshot.image_id}.jpg`,
+                alt: `Screenshot of ${res[0].name}`,
+                title: `${res[0].name} Screenshot`,
+              }));
+            }
+      
+            if (res[0]?.genres?.length) {
+              this.gameGenres = res[0].genres.map((genre: any) => ({
+                name: genre.name
+              }));
+            }
+      
+            if (res[0]?.involved_companies?.length) {
+              this.gameDeveloper = res[0].involved_companies.filter((company: any) =>  company.developer );
+            }
+      
+            if (res[0]?.platforms?.length) {
+              this.gamePlatforms = res[0].platforms.map((platform: any) => ({
+                name: platform.abbreviation,
+                logo: `https://images.igdb.com/igdb/image/upload/t_logo_med/${platform.platform_logo.image_id}.png`
+              }));
+            }
+      
+      })
+    }
 
-      this.releaseDate = new Date(this.gameInfos[0].first_release_date * 1000).toLocaleDateString("fr");
-      this.gameSummary = res[0]?.summary;
 
-      if (res[0]?.screenshots?.length) {
-        this.gameScreenshots = res[0].screenshots.map((screenshot: any) => ({
-          itemImageSrc: `https://images.igdb.com/igdb/image/upload/t_1080p/${screenshot.image_id}.jpg`,
-          alt: `Screenshot of ${res[0].name}`,
-          title: `${res[0].name} Screenshot`,
-        }));
-      }
-
-      if (res[0]?.genres?.length) {
-        this.gameGenres = res[0].genres.map((genre: any) => ({
-          name: genre.name
-        }));
-      }
-
-      if (res[0]?.involved_companies?.length) {
-        this.gameDeveloper = res[0].involved_companies.filter((company: any) =>  company.developer );
-      }
-
-      if (res[0]?.platforms?.length) {
-        this.gamePlatforms = res[0].platforms.map((platform: any) => ({
-          name: platform.abbreviation,
-          logo: `https://images.igdb.com/igdb/image/upload/t_logo_med/${platform.platform_logo.image_id}.png`
-        }));
-      }
-
-    })
   }
 
 }
