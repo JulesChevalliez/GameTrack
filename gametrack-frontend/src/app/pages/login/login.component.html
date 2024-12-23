@@ -1,0 +1,62 @@
+<div class="p-fluid">
+    <!-- Formulaire de connexion -->
+     <div *ngIf="!createAccount">
+         <h3>Connexion</h3>
+         <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+           <div class="field">
+             <label for="email">Email</label>
+             <input id="email" type="email" pInputText formControlName="email" />
+             <small *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+               Email invalide.
+             </small>
+           </div>
+           <div class="field">
+             <label for="password">Mot de passe</label>
+             <input id="password" type="password" pInputText formControlName="password" />
+             <small *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+               Mot de passe requis.
+             </small>
+           </div>
+           <button pButton type="submit" label="Se connecter" [disabled]="loginForm.invalid">Se connecter</button>
+
+        </form>
+        <span (click)="createAccount = true" class="font-medium no-underline ml-2 text-blue-500 text-center cursor-pointer switch-form">Créer un compte</span>
+     </div>
+  
+    <div *ngIf="createAccount">
+        <!-- Formulaire de création de compte -->
+        <h3>Créer un compte</h3>
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="field">
+            <label for="username">Pseudo</label>
+            <input id="username" type="text" pInputText formControlName="username" />
+            <small *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched">
+              Pseudo requis.
+            </small>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" pInputText formControlName="email" />
+            <small *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched">
+              Email invalide.
+            </small>
+          </div>
+          <div class="field">
+            <label for="password">Mot de passe</label>
+            <input id="password" type="password" pInputText formControlName="password" />
+            <small *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched">
+              Mot de passe requis.
+            </small>
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirmation du mot de passe</label>
+            <input id="confirmPassword" type="password" pInputText formControlName="confirmPassword" />
+            <small *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.touched">
+              Les mots de passe ne correspondent pas.
+            </small>
+          </div>
+          <button pButton type="submit" label="Créer un compte" [disabled]="registerForm.invalid">Créer un compte</button>
+        </form>
+        <a (click)="createAccount = false" class="font-medium no-underline ml-2 text-blue-500 text-center cursor-pointer switch-form">J'ai déjà un compte</a>
+    </div>
+  </div>

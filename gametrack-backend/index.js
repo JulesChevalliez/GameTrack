@@ -2,59 +2,70 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const passport = require('passport');
+const passportConfig = require('./config/passport-config');
+const sequelize = require("./utils/database");
+
+const authRoutes = require('./routes/auth');
+const gamesRoutes = require('./routes/games');
 
 dotenv.config(); // Charger le fichier .env
 
 const app = express();
-const PORT = 3000;
+const PORT = 3000;  
+
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Configuration de la session
+const sessionStore = new SequelizeStore({
+  db: sequelize, 
+});
+
 
 // Activer CORS
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200', // Replace with your frontend's URL
+  credentials: true // Allow cookies to be sent
+}));
 
-//GAME DETAILS
-app.get('/api/games/:id', async (req, res) => {
-    let gameId = req.params.id;
-    let filter = `fields *, 
-      screenshots.image_id, 
-      genres.name, 
-      involved_companies.company.name, involved_companies.company.description, involved_companies.developer, involved_companies.company.logo.image_id,
-      platforms.*, platforms.platform_logo.image_id
-      ; where id = ${gameId};`;
+// Session
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: sessionStore,
+        cookie: {
+          httpOnly: true,    // Empêche l'accès JavaScript
+          secure: false,      // Seulement pour HTTPS
+          maxAge: 900000    // 15 mins
+      }
+    })
+);
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.GAME_API_URL}/games/`,
-      headers: { 
-        'Client-ID': `${process.env.GAME_API_KEY}`, 
-        'Authorization': `Bearer ${process.env.GAME_API_BEARER}`,
-        'Content-Type': 'text/plain'
-      },
-      data : filter
-    };
-    
+// Passport.js
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig(passport);
 
-    try {
-        const response = await axios.request(config);
-        res.json(response.data);
-
-    // let config = {
-    //     method: 'post',
-    //     maxBodyLength: Infinity,
-    //     url: 'https://id.twitch.tv/oauth2/token?client_id=6v7na56gh5fw9qe5xom16ztg0tgl8x&client_secret=18in16akb81f5uvhptw40ywi8jfikl&grant_type=client_credentials',
-    //     headers: { }
-    //   };
-      
-    //   axios.request(config)
-    //   .then((response) => {
-    //     console.log(JSON.stringify(response.data));
-    //   })
-    
-    } catch (error) {
-     console.error('Erreur lors de l’appel à l’API externe:', error.message);
-     res.status(500).json({ message: 'Erreur lors de la récupération des données.' });
-    }
+// Synchroniser la table des sessions
+sessionStore.sync().then(() => {
+  console.log('Table de sessions synchronisée');
 });
+
+
+// AUTH
+app.use('/api/auth', authRoutes);
+
+// GAME
+app.use('/api/games', gamesRoutes);
+    
+module.exports = app;
+
 
 // Démarrer le serveur
 app.listen(PORT, () => {
