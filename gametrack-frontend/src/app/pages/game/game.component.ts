@@ -60,10 +60,8 @@ export class GameComponent {
 
   ngOnInit() {
 
-    if(!this.userService.isLoggedIn()){
-      this.router.navigate(["/login"]);
-    }else{
-      this.gameId = this.route.snapshot.paramMap.get('id');
+    this.route.params.subscribe(params => {
+      this.gameId = params['id'];
       this.gameService.getGameById(this.gameId).subscribe((res) => {
             console.log(res);
       
@@ -98,7 +96,9 @@ export class GameComponent {
             }
       
       })
-    }
+    });
+      
+    // }
 
 
   }

@@ -7,13 +7,29 @@
     <nav>
       <p-button label="Home" [link]="true" routerLink=""/>
       <p-button label="Profil" [link]="true" routerLink="profile" *ngIf="userService.isLoggedIn()"/>
-      <p-button label="Game" [link]="true" routerLink="game/1942" *ngIf="userService.isLoggedIn()"/>
       <p-button label="Collection" [link]="true" routerLink="collection" *ngIf="userService.isLoggedIn()"/>
       <p-button label="Login" [link]="true" routerLink="login" *ngIf="!userService.isLoggedIn()"/>
     </nav>
-    <p-iconfield class="p-iconfield p-iconfield-right" >
-      <input type="text" pInputText placeholder="Search" class="p-inputtext p-component" >
-      <p-inputicon styleclass="pi pi-search" class="pi pi-search p-inputicon"></p-inputicon>
-    </p-iconfield>
+    <div class="search-container">
+      <p-iconfield class="p-iconfield p-iconfield-right" >
+        <input type="text" pInputText placeholder="Search" class="p-inputtext p-component" [(ngModel)]="searchTerm"  (change)="searchField()">
+        <p-inputicon styleclass="pi pi-search" class="pi pi-search p-inputicon"></p-inputicon>
+      </p-iconfield>
+      <div class="games-list custom-border" *ngIf="searchResult.data">
+        <div *ngIf="!loading" class="games-list-container">
+          <div *ngFor="let game of searchResult.data" class="games-list-item" (click)="goToGamePage(game.id)">
+            <div>
+              <p-avatar image="{{game?.cover?.url}}" *ngIf="game?.cover?.url"></p-avatar>
+              <p-avatar icon="pi pi-image" *ngIf="!game?.cover?.url"></p-avatar>
+              <span>{{game.name}}</span>
+            </div>
+            <i class="pi pi-arrow-right" style="font-size: 20px"></i>
+          </div>
+        </div>
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem; padding: 10px; text-align: center;" *ngIf="loading"></i>
+        <span style="text-align: center; width: 100%; padding: 10px;" *ngIf="searchResult.data.length == 0">Nothing found</span>
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="offset" [rows]="limit" [totalRecords]="total" [rowsPerPageOptions]="[10, 20, 30]" /> 
+      </div>
+    </div>
   </div>
 </div>  

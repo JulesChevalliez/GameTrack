@@ -20,5 +20,48 @@
             justify-content: space-between;
             gap: 10px;
         }
+        .search-container{
+            position: relative;
+            .games-list{
+                position: absolute;
+                right: 0;
+                width: 500px;
+                display: flex;
+                flex-direction: column;
+                z-index: 99;
+                background-color: white;
+                .games-list-container{
+                    max-height: 700px;
+                    overflow-y: scroll;
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none; 
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
+                    .games-list-item{
+                        padding: 10px;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
+                        transition: all .3s ease-in-out;
+                        border-bottom: 1px solid #ebebeb;
+                        
+                        &:hover{
+                            transform: scale(0.98);
+                            background-color: #000000;
+                            border-radius: 6px;
+                            color: white;
+                        }
+                        div{
+                            display: flex;
+                            flex-direction: row;
+                            gap: 10px;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

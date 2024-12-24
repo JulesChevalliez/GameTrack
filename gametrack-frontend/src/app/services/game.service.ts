@@ -30,4 +30,10 @@ export class GameService {
 
     // return of(res)
   }
-}
+
+  searchGame(term: any, limit: any, offset: any): Observable<any> {
+    const apiUrl = environment.API_URL;
+
+    return this.httpClient.post(environment.API_URL+"games/search/"+term, {limit: limit, offset: offset});
+  }
+ }

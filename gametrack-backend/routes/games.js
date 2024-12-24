@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
     
     try {
       const response = await axios.request(config);
-      res.json(response.data);
+      res.status(200).json(response.data);
       
       // let config = {
         //     method: 'post',
@@ -44,6 +44,45 @@ router.get('/:id', async (req, res) => {
       console.error('Erreur lors de l’appel à l’API externe:', error.message);
       res.status(500).json({ message: 'Erreur lors de la récupération des données.' });
     }
-  });
+});
+
+router.post('/search/:term', async (req, res) => {
+  let term = req.params.term;
+  let limit = req.body.limit ?? 10;
+  let offset = req.body.offset ?? 0;
+  let filter = `fields *, 
+  cover.*, 
+  genres.name, 
+  platforms.*
+  ; where name ~ *"${term}"*
+  ; limit ${limit}
+  ; offset ${offset}
+  ; sort rating desc;`;
+
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `${process.env.GAME_API_URL}/games/`,
+    headers: { 
+      'Client-ID': `${process.env.GAME_API_KEY}`, 
+      'Authorization': `Bearer ${process.env.GAME_API_BEARER}`,
+      'Content-Type': 'text/plain'
+    },
+    data : filter
+  };
+
+  try {
+    const response = await axios.request(config);
+    res.status(200).json({
+      data: [...response.data], 
+      total: response.headers['x-count'],
+      limit: limit,
+      offset: offset
+    });
+  } catch (error) {
+    console.error('Erreur lors de l’appel à l’API externe:', error.message);
+    res.status(500).json({ message: 'Erreur lors de la récupération des données.' });
+  }
+})
 
   module.exports = router;

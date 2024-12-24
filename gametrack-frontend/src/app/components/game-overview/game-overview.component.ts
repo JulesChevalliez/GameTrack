@@ -39,7 +39,6 @@ export class GameOverviewComponent {
   }
 
   onIndexChange(index: any){
-    console.log("INDEX : ", index);
     this.activeIndex = index;
   }
 }
