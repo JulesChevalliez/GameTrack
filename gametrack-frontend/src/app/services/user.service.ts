@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UserService {
-  private user: any = null;
+  private user: any = null; // Variable globale pour stocker l'utilisateur
 
   // Définir l'utilisateur
   setUser(user: any): void {
